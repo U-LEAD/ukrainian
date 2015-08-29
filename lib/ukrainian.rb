@@ -19,10 +19,14 @@ module Ukrainian
       :many => variants[2], :other => variants[3] || variants[2]}, n)
   end
 
-  def transliterate(str)
-    Ukrainian::Transliteration.transliterate(str)
+  def transliterate(str, options = { :skip_unknown => false, :skip_digits => false })
+    Ukrainian::Transliteration.transliterate(str, options)
   end
   alias :translit :transliterate
+
+  def slugify(str, options = { :skip_unknown => true, :skip_digits => false })
+    Ukrainian::Transliteration.slugify(str, options)
+  end
 
   # Ukrainian locale
   LOCALE = :uk

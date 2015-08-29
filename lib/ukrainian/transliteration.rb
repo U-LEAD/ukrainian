@@ -1,72 +1,69 @@
-# -*- encoding: utf-8 -*-
+# encoding: utf-8
 
 module Ukrainian
-  # Ukrainian transliteration
-  #
-  # Транслитерация для букв украинского алфавита
   module Transliteration
     extend self
 
-    # Transliteration heavily based on rutils gem by Julian "julik" Tarkhanov and Co.
-    # <http://rutils.rubyforge.org/>
-    # Cleaned up and optimized.
-
-    LOWER_SINGLE = {
-      "а"=>"a",  "б"=>"b",   "в"=>"v",  "г"=>"g",
-      "ґ"=>"h",  "д"=>"d",   "е"=>"e",  "є"=>"ye",  
-      "ж"=>"zh", "з"=>"z",   "и"=>"y",  "і"=>"i", 
-      "ї"=>"yi", "й"=>"j",   "к"=>"k",  "л"=>"l",
-      "м"=>"m",  "н"=>"n",   "о"=>"o",  "п"=>"p",
-      "р"=>"r",  "с"=>"s",   "т"=>"t",  "у"=> "u",
-      "ф"=>"f",  "х"=>"kh",  "ц"=>"ts", "ч"=>"ch",
-      "ш"=>"sh", "щ"=>"sch", "ь"=>"'",  "ю"=>"yu",
-      "я"=>"ya", "№"=>"#"
-    }
-    LOWER_MULTI = {
-      "зг"=>"zgh"
+    # https://uk.wikipedia.org/wiki/%D0%A2%D1%80%D0%B0%D0%BD%D1%81%D0%BB%D1%96%D1%82%D0%B5%D1%80%D0%B0%D1%86%D1%96%D1%8F
+    LOWER_RULES = {
+      'а'=>'a',  'б'=>'b',    'в'=>'v',  'г'=>'h',
+      'ґ'=>'g',  'д'=>'d',    'е'=>'e',  'є'=>'ie',
+      'ж'=>'zh', 'з'=>'z',    'и'=>'y',  'і'=>'i',
+      'ї'=>'i',  'й'=>'i',    'к'=>'k',  'л'=>'l',
+      'м'=>'m',  'н'=>'n',    'о'=>'o',  'п'=>'p',
+      'р'=>'r',  'с'=>'s',    'т'=>'t',  'у'=> 'u',
+      'ф'=>'f',  'х'=>'kh',   'ц'=>'ts', 'ч'=>'ch',
+      'ш'=>'sh', 'щ'=>'shch', 'ь'=>'',   'ю'=>'iu',
+      'я'=>'ia'
     }
 
-    UPPER_SINGLE = {
-      "А"=>"A",  "Б"=>"B",   "В"=>"V",  "Г"=>"G",
-      "Ґ"=>"H",  "Д"=>"D",   "Е"=>"E",  "Є"=>"YE",
-      "Ж"=>"ZH", "З"=>"Z",   "И"=>"Y",  "І"=>"I",
-      "Ї"=>"YI", "Й"=>"J",   "К"=>"K",  "Л"=>"L",
-      "М"=>"M",  "Н"=>"N",   "О"=>"O",  "П"=>"P",
-      "Р"=>"R",  "С"=>"S",   "Т"=>"T",  "У"=> "U",
-      "Ф"=>"F",  "Х"=>"KH",  "Ц"=>"TS", "Ч"=>"CH",
-      "Ш"=>"SH", "Щ"=>"SCH", "Ь"=>"'",  "Ю"=>"YU",
-      "Я"=>"YA", "№"=>"#"
-    }
-    UPPER_MULTI = {
-      "ЗГ"=>"ZGH"
+    CAPITAL_RULES = {
+      'А'=>'A',  'Б'=>'B',    'В'=>'V',  'Г'=>'H',
+      'Ґ'=>'G',  'Д'=>'D',    'Е'=>'E',  'Є'=>'Ie',
+      'Ж'=>'Zh', 'З'=>'Z',    'И'=>'Y',  'І'=>'I',
+      'Ї'=>'I',  'Й'=>'I',    'К'=>'K',  'Л'=>'L',
+      'М'=>'M',  'Н'=>'N',    'О'=>'O',  'П'=>'P',
+      'Р'=>'R',  'С'=>'S',    'Т'=>'T',  'У'=> 'U',
+      'Ф'=>'F',  'Х'=>'Kh',   'Ц'=>'Ts', 'Ч'=>'Ch',
+      'Ш'=>'Sh', 'Щ'=>'Shch', 'Ь'=>'',   'Ю'=>'Iu',
+      'Я'=>'Ia'
     }
 
-    LOWER = (LOWER_SINGLE.merge(LOWER_MULTI)).freeze
-    UPPER = (UPPER_SINGLE.merge(UPPER_MULTI)).freeze
-    MULTI_KEYS = (LOWER_MULTI.merge(UPPER_MULTI)).keys.sort_by {|s| s.length}.reverse.freeze
+    BEGINNING_OF_WORD_RULES = {
+      'Є' => 'Ye', 'Ї' => 'Yi', 'Й' => 'Y', 'Ю' => 'Yu', 'Я' => 'Ya',
+      'є' => 'ye', 'ї' => 'yi', 'й' => 'y', 'ю' => 'yu', 'я' => 'ya'
+    }
 
-    # Transliterate a string with ukrainian characters
-    #
-    # Возвращает строку, в которой все буквы украинского алфавита заменены на похожую по звучанию латиницу
-    def transliterate(str)
-      chars = str.scan(%r{#{MULTI_KEYS.join '|'}|\w|.})
+    COMBINATION_RULES = { 'зг' => 'zgh', 'зГ' => 'zGH', 'ЗГ' => 'ZGH', 'Зг' => 'Zgh' }
 
-      result = ""
+    UPCASE_RULES = CAPITAL_RULES.inject({}) { |rules, (k, v)| rules[k] = v.upcase; rules }.freeze
+    RULES = LOWER_RULES.merge(CAPITAL_RULES).merge(COMBINATION_RULES).merge({ '№'=>'#', '-'=>'-' }).freeze
+    REGEXP = /#{COMBINATION_RULES.keys.join('|')}|./.freeze
+    LETTERS = LOWER_RULES.keys.concat(CAPITAL_RULES.keys).freeze
 
-      chars.each_with_index do |char, index|
-        if UPPER.has_key?(char) && LOWER.has_key?(chars[index+1])
-          # combined case
-          result << UPPER[char].downcase.capitalize
-        elsif UPPER.has_key?(char)
-          result << UPPER[char]
-        elsif LOWER.has_key?(char)
-          result << LOWER[char]
-        else
+    # Official Ukrainian-English transliteration
+    def transliterate(string, options = { :skip_unknown => false, :skip_digits => false })
+      chars = string.scan(REGEXP)
+
+      chars.each_with_index.inject('') do |result, (char, index)|
+        if (index == 0 || !LETTERS.include?(chars[index-1])) && BEGINNING_OF_WORD_RULES.has_key?(char)
+          result << BEGINNING_OF_WORD_RULES[char]
+        elsif UPCASE_RULES.has_key?(char) && (index > 0 && UPCASE_RULES.has_key?(chars[index-1]) || UPCASE_RULES.include?(chars[index+1]))
+          result << UPCASE_RULES[char]
+        elsif RULES.has_key?(char)
+          result << RULES[char]
+        elsif char == ' '
           result << char
+        elsif char =~ /\d/
+          options[:skip_digits] ? result : result << char
+        else
+          options[:skip_unknown] ? result : result << char
         end
       end
+    end
 
-      result
+    def slugify(string, options = { :skip_unknown => true, :skip_digits => false })
+      transliterate(string, options).downcase.strip.squeeze(' ').gsub('#', '').gsub(' ', '-')
     end
   end
 end
