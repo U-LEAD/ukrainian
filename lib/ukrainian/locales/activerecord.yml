@@ -44,4 +44,5 @@ uk:
         less_than_or_equal_to: "має бути менше ніж або дорівнювати %{count}"
         odd: "має бути непарним"
         even: "має бути парним"
+        record_invalid: "Виникли помилки: %{errors}"
         # Append your own errors here or at the model/attributes scope.
