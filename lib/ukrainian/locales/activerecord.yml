@@ -45,4 +45,5 @@ uk:
         odd: "має бути непарним"
         even: "має бути парним"
         record_invalid: "Виникли помилки: %{errors}"
+        present: 'повинно бути пустим'
         # Append your own errors here or at the model/attributes scope.
