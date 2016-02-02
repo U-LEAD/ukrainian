@@ -25,7 +25,6 @@ Gem::Specification.new do |s|
      "VERSION.yml",
      "init.rb",
      "lib/ukrainian.rb",
-     "lib/ukrainian/backend/simple.rb",
      "lib/ukrainian/locales/actionview.yml",
      "lib/ukrainian/locales/activerecord.yml",
      "lib/ukrainian/locales/activesupport.yml",
@@ -64,4 +63,3 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<i18n>, [">= 0"])
   end
 end
-
