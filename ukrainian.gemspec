@@ -16,27 +16,7 @@ Gem::Specification.new do |s|
     "LICENSE",
      "README.rdoc"
   ]
-  s.files = [
-    ".document",
-     ".gitignore",
-     "LICENSE",
-     "README.rdoc",
-     "Rakefile",
-     "VERSION.yml",
-     "init.rb",
-     "lib/ukrainian.rb",
-     "lib/ukrainian/locales/actionview.yml",
-     "lib/ukrainian/locales/activerecord.yml",
-     "lib/ukrainian/locales/activesupport.yml",
-     "lib/ukrainian/locales/datetime.yml",
-     "lib/ukrainian/locales/devise.yml",
-     "lib/ukrainian/locales/formtastic.yml",
-     "lib/ukrainian/locales/inherited_resources.yml",
-     "lib/ukrainian/locales/pluralize.rb",
-     "test/test_helper.rb",
-     "test/ukrainian_test.rb",
-     "ukrainian.gemspec"
-  ]
+  s.files = Dir.glob("{lib,spec,test}/**/**") + %w(Gemfile LICENSE Rakefile README.квщс ukrainian.gemspec)
   s.homepage = %q{http://github.com/romanvbabenko/ukrainian}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
