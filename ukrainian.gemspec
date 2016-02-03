@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
     "LICENSE",
      "README.rdoc"
   ]
-  s.files = Dir.glob("{lib,spec,test}/**/**") + %w(Gemfile LICENSE Rakefile README.квщс ukrainian.gemspec)
+  s.files = Dir.glob("{lib,spec,test}/**/**") + %w(Gemfile LICENSE Rakefile README.rdoc ukrainian.gemspec)
   s.homepage = %q{http://github.com/romanvbabenko/ukrainian}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
